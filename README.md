@@ -5,14 +5,29 @@ The challenge is that there is a separate firmware for different chip brand/fami
 
 This firmware is a tentative to unify the code, using the Arduino platform on Platformio thanks to projects like [STM32duino](https://github.com/stm32duino) and [CommunityGD32Cores](https://github.com/CommunityGD32Cores).<br>
 
-The benefits would be:
-* Being able to run the same firmware on sideboards, Arduino, ESP8288/ESP32
+The benefits is:
+* Being able to run the same firmware on most of the sideboards, and potentially on Arduino boards/ESP8288/ESP32 with small changes
 * Arduino code would make this firmware more inclusive for contributions
-* Many available librairies that can help extend the support of new IMUs or sensors (encoders,displays,....)
-* Bigger community  
-* Possibility to later extend this firmware with SimpleFOC motor control on [splitboards](https://github.com/EFeru/hoverboard-firmware-hack-FOC/wiki/Firmware-Compatibility#splitboards) ( Can be GD32F130C8/C6, STM32F103C8/C6, GD32F103C8/C6, GD32F130K6, GD32E230K6 )
+* Many available librairies that can help extend the support of new IMUs,sensors,encoders,displays,....
+* Bigger community
+* Possibility to later extend this firmware with SimpleFOC motor control for [splitboards](https://github.com/EFeru/hoverboard-firmware-hack-FOC/wiki/Firmware-Compatibility#splitboards) ( Can be GD32F130C8/C6, STM32F103C8/C6, GD32F103C8/C6, GD32F130K6, GD32E230K6 )
 
-For now it's only a Proof of concept.
+This is a very early development so it requires more testing and documentation.<br>
+I am only using Platformio, I cannot support other IDEs.<br>
+Select in platformio the environment that matches with your chip.<br>
+For GD32F108C8 and STM32FEBK chips, STM32F103 should work.<br>
 
-
+What works:
+|                          |STM32F103C8|GD32F130C6| Comment                  |  
+|--------------------------|-----------|----------|--------------------------| 
+| Leds                     |✔️        |✔️       |                          |
+| Sensors                  |✔️        |✔️       |                          |
+| Segger RTT debug         |✔️        |✔️       |                          |
+| Usart command send       |✔️        |✔️       |                          |
+| Usart feedback receive   |✔️        |✔️       |                          |
+| MPU6050 raw data         |✔️        |          |                          |
+| MPU6050A raw data        |           |          |                          |
+| MPU6050C raw data        |✔️        |          |                          |
+| MPU6052C raw data        |❌        |❌       | Requires I2C single byte |
+| Pitch/Roll angle calculation    |           |          |                          |
 
