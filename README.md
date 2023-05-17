@@ -14,7 +14,9 @@ The benefits is:
 
 This is a very early development so it requires more testing and documentation.<br>
 I am only using Platformio, I cannot support other IDEs.<br>
-Select in platformio the environment that matches with your chip.<br>
+
+Select the environment that matches with your chip in platformio's bottom bar.<br>
+![image](https://github.com/Candas1/Sideboard-Arduino/assets/20670049/e25f6ef2-183c-4a98-8ad6-b6f57afc23d7)
 For GD32F108C8 and STM32FEBK chips, STM32F103 should work.<br>
 
 What works:
