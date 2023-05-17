@@ -5,7 +5,7 @@ The challenge is that there is a separate firmware for different chip brand/fami
 
 This firmware is a tentative to unify the code, using the Arduino platform on Platformio thanks to projects like [STM32duino](https://github.com/stm32duino) and [CommunityGD32Cores](https://github.com/CommunityGD32Cores).<br>
 
-The benefits is:
+The benefits are:
 * Being able to run the same firmware on most of the sideboards, and potentially on Arduino boards/ESP8288/ESP32 with small changes
 * Arduino code would make this firmware more inclusive for contributions
 * Many available librairies that can help extend the support of new IMUs,sensors,encoders,displays,....
