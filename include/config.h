@@ -4,35 +4,35 @@
 
 
 // SEGGER RTT Debug
-#define DEBUG_SERIAL // Uncomment to enable Debug
+//#define DEBUG_SERIAL rtt              // Uncomment to enable DEBUG
 #ifdef DEBUG_SERIAL
   #undef Serial
   #define Serial rtt
 #endif
 
 // Hover serial protocol
-#define HOVER_SERIAL                  // Send commands to the mainboard and receive feedback
-#define HOVER_SERIAL_BAUD   115200      // [-] Baud rate for HoverSerial (used to communicate with the hoverboard)
-#define START_FRAME         0xABCD     	// [-] Start frme definition for reliable serial communication
+#define HOVER_SERIAL                    // Send commands to the mainboard and receive feedback
+#ifdef HOVER_SERIAL
+  #define HOVER_SERIAL_BAUD   115200    // [-] Baud rate for HoverSerial (used to communicate with the hoverboard)
+#endif
+
 #define TIME_SEND           100         // [ms] Sending time interval
 
-// RF Receiver
-#define RECEIVER
+// 433Mhz RF Remote
+//#define REMOTE                          // Uncomment to enable 433Mhz Receiver. 
+#ifdef REMOTE 
+  #define REMOTE_BUTTON1 6637793
+  #define REMOTE_BUTTON2 6637794
+  #define REMOTE_BUTTON3 6637796
+  #define REMOTE_BUTTON4 6637800
+#endif 
 
 // Test
-#define TEST                          // Will send test commands to the mainboard
-#define SPEED_MAX_TEST      50          // [-] Maximum speed for testing
-#define SPEED_STEP          2           // [-] Speed step
-
-// Control
-#define COM_CTRL        0               // [-] Commutation Control Type
-#define SIN_CTRL        1               // [-] Sinusoidal Control Type
-#define FOC_CTRL        2               // [-] Field Oriented Control (FOC) Type
-
-#define OPEN_MODE       0               // [-] OPEN mode
-#define VLT_MODE        1               // [-] VOLTAGE mode
-#define SPD_MODE        2               // [-] SPEED mode
-#define TRQ_MODE        3               // [-] TORQUE mode
+#define TEST                            // Will send test commands to the mainboard
+#ifdef TEST
+  #define SPEED_MAX_TEST      50        // [-] Maximum speed for testing
+  #define SPEED_STEP          2         // [-] Speed step
+#endif
 
 //#define MPU6050
 //#define ICM20948
