@@ -12,8 +12,7 @@ This firmware is a tentative to unify the code, using the Arduino platform on Pl
 * Possibility to later extend this firmware with SimpleFOC motor control for [splitboards](https://github.com/EFeru/hoverboard-firmware-hack-FOC/wiki/Firmware-Compatibility#splitboards) ( Can be GD32F130C8/C6, STM32F103C8/C6, GD32F103C8/C6, GD32F130K6, GD32E230K6 )
 
 ### IMUs
-I aim with this firmware to support more IMUs by only retrieving raw data and doing the angle calculation on the MCU, so no DMP features will be supported.<br>
-This should be enough for balancing use cases.<br>
+I aim with this firmware to support more IMUs by only retrieving raw data and doing the angle calculation on the MCU, so no DMP features will be supported. This should be enough for balancing use cases.<br>
 I also would like to implement a test mode to identify the IMU like [this](https://github.com/Levi--G/IMU-WhoAmIVerifier) project does as the writing on the chip is not always accurate.
 
 ### How to use
