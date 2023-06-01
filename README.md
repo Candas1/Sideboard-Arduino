@@ -32,7 +32,7 @@ What works:
 | MPU6050A raw data        |           |          |                          |
 | MPU6050C raw data        |✔️        |          |                          |
 | MPU6052C raw data        |❌        |❌       | Requires I2C single byte |
-| Pitch/Roll angle calculation    |           |          |                          |
+| Pitch/Roll angle calculation    |           |          | Use [this](https://github.com/arduino-libraries/MadgwickAHRS)?                         |
 | SimpleFOC trapezoidal    |        |          |                          |
 | SimpleFOC FOC            |        |          |                          |
 
