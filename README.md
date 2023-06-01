@@ -26,10 +26,13 @@ What works:
 | Sensors                  |✔️        |✔️       |                          |
 | Segger RTT debug         |✔️        |✔️       |                          |
 | Usart command send       |✔️        |✔️       |                          |
-| Usart feedback receive   |✔️        |✔️       |                          |
+| Usart feedback receive   |✔️        |Stops after a few seconds ([issue](https://github.com/CommunityGD32Cores/ArduinoCore-GD32/issues/76))       |                          |
+| 433mhz remote            |✔️        |Not tested       |                          |
 | MPU6050 raw data         |✔️        |          |                          |
 | MPU6050A raw data        |           |          |                          |
 | MPU6050C raw data        |✔️        |          |                          |
 | MPU6052C raw data        |❌        |❌       | Requires I2C single byte |
 | Pitch/Roll angle calculation    |           |          |                          |
+| SimpleFOC trapezoidal    |        |          |                          |
+| SimpleFOC FOC            |        |          |                          |
 
