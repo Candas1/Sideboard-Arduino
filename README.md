@@ -13,7 +13,8 @@ This firmware is a tentative to unify the code, using the Arduino platform on Pl
 
 ### IMUs
 I aim with this firmware to support more IMUs by only retrieving raw data and doing the angle calculation on the MCU, so no DMP features will be supported.<br>
-This should be enough for balancing use cases.
+This should be enough for balancing use cases.<br>
+I also would like to implement a test mode to identify the IMU like [this](https://github.com/Levi--G/IMU-WhoAmIVerifier) project does as the writing on the chip is not always accurate.
 
 ### How to use
 I am only using Platformio, I cannot support other IDEs.<br>
