@@ -38,5 +38,5 @@ This is a very early development so it requires more testing and documentation.<
 | MPU6052C raw data        |❌        |❌       | Requires I2C single byte |
 | Pitch/Roll angle calculation    |           |          | Use [this](https://github.com/arduino-libraries/MadgwickAHRS)?                         |
 | SimpleFOC trapezoidal    |        |          |                          |
-| SimpleFOC FOC            |        |          |                          |
+| SimpleFOC FOC            |        |          | Will need [this](https://community.simplefoc.com/t/smoothingsensor-experimental-sensor-angle-extrapoltion/3105)              |
 
