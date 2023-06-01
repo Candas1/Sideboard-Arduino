@@ -15,8 +15,11 @@ The benefits are:
 This is a very early development so it requires more testing and documentation.<br>
 I am only using Platformio, I cannot support other IDEs.<br>
 
+### IMUs
+I aim with this firmware to support more IMUs by only retrieving raw data and doing the angle calculation on the MCU, so no DMP features will be supported.<br>
+This should be enough for balancing use cases.
+
 Select the environment that matches with your chip in platformio's bottom bar.<br>
-![image](https://github.com/Candas1/Sideboard-Arduino/assets/20670049/e25f6ef2-183c-4a98-8ad6-b6f57afc23d7)<br>
 For GD32F108C8 and STM32FEBK chips, STM32F103 should work.<br>
 
 What works:
@@ -27,7 +30,7 @@ What works:
 | Segger RTT debug         |✔️        |✔️       |                          |
 | Usart command send       |✔️        |✔️       |                          |
 | Usart feedback receive   |✔️        |Stops after a few seconds ([issue](https://github.com/CommunityGD32Cores/ArduinoCore-GD32/issues/76))       |                          |
-| 433mhz remote            |✔️        |Not tested       |                          |
+| 433mhz remote            |✔️        |✔️       |                          |
 | MPU6050 raw data         |✔️        |          |                          |
 | MPU6050A raw data        |           |          |                          |
 | MPU6050C raw data        |✔️        |          |                          |
