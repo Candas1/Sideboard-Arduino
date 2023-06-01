@@ -19,7 +19,7 @@ I also would like to implement a test mode to identify the IMU like [this](https
 I am only using Platformio, I cannot support other IDEs.<br>
 * Install [Vscode](https://code.visualstudio.com/download)
 * Install [Platformio](https://platformio.org/platformio-ide) for the website or from VSCODE's extensions
-* Download the project or use git to clone to repository in VSCODE
+* Download the project or use git to clone this repository in VSCODE
 * Select the environment that matches with your chip in platformio's bottom bar (For GD32F108C8 and STM32FEBK chips, STM32F103 should work) <br>
 
 ### Status:
