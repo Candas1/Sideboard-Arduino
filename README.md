@@ -11,6 +11,10 @@ This firmware is a tentative to unify the code, using the Arduino platform on Pl
 * Many available librairies that can help extend the support of new IMUs,sensors,encoders,displays,....
 * Possibility to later extend this firmware with SimpleFOC motor control for [splitboards](https://github.com/EFeru/hoverboard-firmware-hack-FOC/wiki/Firmware-Compatibility#splitboards) ( Can be GD32F130C8/C6, STM32F103C8/C6, GD32F103C8/C6, GD32F130K6, GD32E230K6 )
 
+### Debug
+[SEGGER RTT](https://www.segger.com/products/debug-probes/j-link/technology/about-real-time-transfer/) let's you debug without the need for an USART to USB bridge. It uses the STLINK and the programming pins.<br>
+[This](https://www.youtube.com/watch?v=_vNCye_IlYU) video shows how to use it for monitoring in Platformio.
+
 ### IMUs
 I aim with this firmware to support more IMUs by only retrieving raw data and doing the angle calculation on the MCU, so no DMP features will be supported. This should be enough for balancing use cases.<br>
 I also would like to implement a test mode to identify the IMU like [this](https://github.com/Levi--G/IMU-WhoAmIVerifier) project does as the writing on the chip is not always accurate.
@@ -18,9 +22,11 @@ I also would like to implement a test mode to identify the IMU like [this](https
 ### How to use
 I am only using Platformio, I cannot support other IDEs.<br>
 * Install [Vscode](https://code.visualstudio.com/download)
-* Install [Platformio](https://platformio.org/platformio-ide) for the website or from VSCODE's extensions
+* Install [Platformio](https://platformio.org/platformio-ide) from the website or from VSCODE's extensions
 * Download the project or use git to clone this repository in VSCODE
 * Select the environment that matches with your chip in platformio's bottom bar (For GD32F108C8 and STM32FEBK chips, STM32F103 should work) <br>
+* [Unlock](https://github.com/EFeru/hoverboard-firmware-hack-FOC/wiki/How-to-Unlock-MCU-Flash) the chip
+* Press the 'PlatformIO:Upload' button (bottom left in vscode) to build and upload the firmwware
 
 ### Status:
 This is a very early development so it requires more testing and documentation.<br>
