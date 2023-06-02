@@ -12,7 +12,7 @@ This firmware is a tentative to unify the code, using the Arduino platform on Pl
 * Possibility to later extend this firmware with SimpleFOC motor control for [splitboards](https://github.com/EFeru/hoverboard-firmware-hack-FOC/wiki/Firmware-Compatibility#splitboards) ( Can be GD32F130C8/C6, STM32F103C8/C6, GD32F103C8/C6, GD32F130K6, GD32E230K6 )
 
 ### Debug
-[SEGGER RTT](https://www.segger.com/products/debug-probes/j-link/technology/about-real-time-transfer/) let's you debug without the need for an USART to USB bridge. It uses the STLINK and the programming pins.<br>
+[SEGGER RTT](https://www.segger.com/products/debug-probes/j-link/technology/about-real-time-transfer/) let's you debug without the need for an USART to USB bridge. It uses the STLINK and the programming pins. Only downside is that you need to make sure you stop the rtt connection before flashing. <br>
 [This](https://www.youtube.com/watch?v=_vNCye_IlYU) video shows how to use it for monitoring in Platformio.
 
 ### IMUs
@@ -43,6 +43,7 @@ This is a very early development so it requires more testing and documentation.<
 | MPU6050C raw data        |✔️        |          |                          |
 | MPU6052C raw data        |❌        |❌       | Requires I2C single byte |
 | Pitch/Roll angle calculation    |           |          | Use [this](https://github.com/arduino-libraries/MadgwickAHRS)?                         |
-| SimpleFOC trapezoidal    |        |          |                          |
-| SimpleFOC FOC            |        |          | Will need [this](https://community.simplefoc.com/t/smoothingsensor-experimental-sensor-angle-extrapoltion/3105)              |
+| SimpleFOC trapezoidal    |        |          | Needs Pwm/timers to work                         |
+| SimpleFOC Sinusoidal     |        |          | Needs [sensor smoothing](https://community.simplefoc.com/t/smoothingsensor-experimental-sensor-angle-extrapoltion/3105) |
+| SimpleFOC FOC            |        |          | Needs 2 shunt current sensing to work              |
 
