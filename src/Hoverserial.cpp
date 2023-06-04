@@ -2,6 +2,13 @@
 #include <Stream.h>
 #include "Defines.h"
 #include "Hoverserial.h"
+#include "config.h"
+
+#ifdef DEBUG_SERIAL
+  #include <RTTStream.h>
+  extern RTTStream rtt;
+  extern int debug;
+#endif
 
 #define START_FRAME 0xABCD      // [-] Start frame definition for reliable serial communication
 
@@ -100,34 +107,40 @@ void Hoverserial::receive(){
                   _NewFeedback.speedL_meas ^ 
                   _NewFeedback.batVoltage ^ 
                   _NewFeedback.boardTemp ^
-                  _NewFeedback.cmdLed);
+                  _NewFeedback.cmdLed
+                  );
 
         // Check validity of the new data
         if (_NewFeedback.start == START_FRAME && checksum == _NewFeedback.checksum) {
-            // Copy the new data
-            memcpy(&_Feedback, &_NewFeedback, sizeof(SerialFeedback));
+          // Copy the new data
+          memcpy(&_Feedback, &_NewFeedback, sizeof(SerialFeedback));
 
-            #ifdef DEBUG_SERIAL
+          #ifdef DEBUG_SERIAL
+            if (debug & PRINT_SERIAL){
               // Print data to built-in Serial
-              DEBUG_SERIAL.print("1: ");   DEBUG_SERIAL.print(_Feedback.cmd1);
-              DEBUG_SERIAL.print(" 2: ");  DEBUG_SERIAL.print(_Feedback.cmd2);
-              DEBUG_SERIAL.print(" 3: ");  DEBUG_SERIAL.print(_Feedback.speedR_meas);
-              DEBUG_SERIAL.print(" 4: ");  DEBUG_SERIAL.print(_Feedback.speedL_meas);
-              DEBUG_SERIAL.print(" 5: ");  DEBUG_SERIAL.print(_Feedback.batVoltage);
-              DEBUG_SERIAL.print(" 6: ");  DEBUG_SERIAL.print(_Feedback.boardTemp);
-              DEBUG_SERIAL.print(" 7: ");  DEBUG_SERIAL.println(_Feedback.cmdLed);
-            #endif
+              DEBUG_SERIAL.print(F("1: "));   DEBUG_SERIAL.print(_Feedback.cmd1);
+              DEBUG_SERIAL.print(F(" 2: "));  DEBUG_SERIAL.print(_Feedback.cmd2);
+              DEBUG_SERIAL.print(F(" 3: "));  DEBUG_SERIAL.print(_Feedback.speedR_meas);
+              DEBUG_SERIAL.print(F(" 4: "));  DEBUG_SERIAL.print(_Feedback.speedL_meas);
+              DEBUG_SERIAL.print(F(" 5: "));  DEBUG_SERIAL.print(_Feedback.batVoltage);
+              DEBUG_SERIAL.print(F(" 6: "));  DEBUG_SERIAL.print(_Feedback.boardTemp);
+              DEBUG_SERIAL.print(F(" 7: "));  DEBUG_SERIAL.println(_Feedback.cmdLed);
+            }
+          #endif
 
-            // handle Leds
-            digitalWrite(LED1_PIN,_Feedback.cmdLed & LED1_SET?HIGH:LOW);
-            digitalWrite(LED2_PIN,_Feedback.cmdLed & LED2_SET?HIGH:LOW);
-            digitalWrite(LED3_PIN,_Feedback.cmdLed & LED3_SET?HIGH:LOW);
-            digitalWrite(LED4_PIN,_Feedback.cmdLed & LED4_SET?HIGH:LOW);
-            digitalWrite(LED5_PIN,_Feedback.cmdLed & LED5_SET?HIGH:LOW);
+          // handle Leds
+          digitalWrite(LED1_PIN,_Feedback.cmdLed & LED1_SET?HIGH:LOW);
+          digitalWrite(LED2_PIN,_Feedback.cmdLed & LED2_SET?HIGH:LOW);
+          digitalWrite(LED3_PIN,_Feedback.cmdLed & LED3_SET?HIGH:LOW);
+          digitalWrite(LED4_PIN,_Feedback.cmdLed & LED4_SET?HIGH:LOW);
+          digitalWrite(LED5_PIN,_Feedback.cmdLed & LED5_SET?HIGH:LOW);
+            
         } else {
-        #ifdef DEBUG_SERIAL
-            DEBUG_SERIAL.println("Non-valid data skipped");
-        #endif
+          #ifdef DEBUG_SERIAL
+            if (debug & PRINT_SERIAL){
+              DEBUG_SERIAL.println(F("Non-valid data skipped"));
+            }
+          #endif
         }
         _idx = 0;    // Reset the index (it prevents to enter in this if condition in the next cycle)
       }

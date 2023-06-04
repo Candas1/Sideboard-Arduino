@@ -16,6 +16,14 @@
 #define MPU_SCL PB6
 #define MPU_SDA PB7
 
+#define PRINT_ACCEL                 (0x01)
+#define PRINT_GYRO                  (0x02)
+#define PRINT_QUAT                  (0x04)
+#define PRINT_EULER                 (0x08)
+#define PRINT_TEMP                  (0x10)
+#define PRINT_REMOTE                (0x20)
+#define PRINT_SERIAL                (0x40)
+
 #define LED1_SET                    (0x01)
 #define LED2_SET                    (0x02)
 #define LED3_SET                    (0x04)

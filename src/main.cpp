@@ -15,6 +15,7 @@
 #ifdef DEBUG_SERIAL
   #include <RTTStream.h>
   RTTStream rtt;
+  int debug = 0;
 #endif
 
 #ifdef MPU6050
@@ -31,6 +32,7 @@
 #endif
 
 #ifdef IMU
+#include <Adafruit_AHRS.h>
 Adafruit_Sensor *mpu_temp, *mpu_accel, *mpu_gyro;
 #endif //IMU
 
@@ -66,7 +68,7 @@ void setup(){
   #endif
 
   #ifdef DEBUG_SERIAL
-    DEBUG_SERIAL.println("Hoverboard Serial v1.0");
+    DEBUG_SERIAL.println(F("Hoverboard Serial v1.0"));
   #endif
 
   #ifdef REMOTE
@@ -125,6 +127,69 @@ void loop(){
     hoverserial.receive();
   #endif
 
+  #ifdef DEBUG_SERIAL
+    // Process debug commands
+    if(DEBUG_SERIAL.available() > 0) {
+      char buf[SERIAL_RX_BUFFER_SIZE + 1];
+      size_t numRead = DEBUG_SERIAL.readBytes(buf, sizeof(buf));
+      buf[numRead] = '\0';
+      if (buf[1] == '\n'){
+        switch (buf[0]){
+          case 'h':
+            DEBUG_SERIAL.println(F("=== HELP ==="));
+            DEBUG_SERIAL.println(F("h: Print Help"));
+            #ifdef HOVER_SERIAL
+              DEBUG_SERIAL.println(F("s: Print Serial"));
+            #endif             
+            
+            #ifdef REMOTE
+              DEBUG_SERIAL.println(F("r: Print Remote"));
+            #endif
+            
+            #ifdef IMU
+              DEBUG_SERIAL.println(F("a: Print Accelerometer"));
+              DEBUG_SERIAL.println(F("g: Print Gyroscope"));
+              DEBUG_SERIAL.println(F("q: Print Quaternion"));
+              DEBUG_SERIAL.println(F("e: Print Euler angles"));
+              DEBUG_SERIAL.println(F("t: Print Temperature"));
+            #endif // IMU
+
+            DEBUG_SERIAL.println(F("============"));
+            break;
+          #ifdef IMU  
+          case 'a':
+            debug ^= PRINT_ACCEL;
+            break;
+          case 'g':
+            debug ^= PRINT_GYRO;
+            break;
+          case 'q':
+            debug ^= PRINT_QUAT;
+            break;
+          case 'e':
+            debug ^= PRINT_EULER;
+            break;
+          case 't':
+            debug ^= PRINT_TEMP;
+            break;
+          #endif //IMU
+
+          #ifdef HOVER_SERIAL
+          case 's':
+            debug ^= PRINT_SERIAL;
+            break;
+          #endif //HOVERSERIAL
+
+          #ifdef REMOTE
+          case 'r':
+            debug ^= PRINT_REMOTE;
+            break;
+           #endif //REMOTE
+        }
+      }
+    }
+  #endif
+
   // Delay
   unsigned long timeNow = millis();
   if (iTimeSend > timeNow) return;
@@ -140,54 +205,65 @@ void loop(){
     mpu_gyro->getEvent(&gyro);
 
     #ifdef DEBUG_SERIAL
-      DEBUG_SERIAL.print("Temperature ");
-      DEBUG_SERIAL.print(temp.temperature);
-      DEBUG_SERIAL.println(" deg C");
+      if (debug & PRINT_TEMP){
+        DEBUG_SERIAL.print(F("Temperature "));
+        DEBUG_SERIAL.print(temp.temperature);
+        DEBUG_SERIAL.println(F(" deg C"));
+      }
+      
+      if (debug & PRINT_ACCEL){
+        /* Display the results (acceleration is measured in m/s^2) */
+        DEBUG_SERIAL.print(F("Accel X: "));
+        DEBUG_SERIAL.print(accel.acceleration.x);
+        DEBUG_SERIAL.print(F(" Y: "));
+        DEBUG_SERIAL.print(accel.acceleration.y);
+        DEBUG_SERIAL.print(F(" Z: "));
+        DEBUG_SERIAL.print(accel.acceleration.z);
+        DEBUG_SERIAL.println(F(" m/s^2 "));
+      }
 
-      /* Display the results (acceleration is measured in m/s^2) */
-      DEBUG_SERIAL.print("Accel X: ");
-      DEBUG_SERIAL.print(accel.acceleration.x);
-      DEBUG_SERIAL.print(" \tY: ");
-      DEBUG_SERIAL.print(accel.acceleration.y);
-      DEBUG_SERIAL.print(" \tZ: ");
-      DEBUG_SERIAL.print(accel.acceleration.z);
-      DEBUG_SERIAL.println(" m/s^2 ");
-
-      /* Display the results (rotation is measured in rad/s) */
-      DEBUG_SERIAL.print("Gyro X: ");
-      DEBUG_SERIAL.print(gyro.gyro.x);
-      DEBUG_SERIAL.print(" \tY: ");
-      DEBUG_SERIAL.print(gyro.gyro.y);
-      DEBUG_SERIAL.print(" \tZ: ");
-      DEBUG_SERIAL.print(gyro.gyro.z);
-      DEBUG_SERIAL.println(" radians/s ");
-      DEBUG_SERIAL.println();
+      if (debug & PRINT_GYRO){
+        /* Display the results (rotation is measured in rad/s) */
+        DEBUG_SERIAL.print(F("Gyro X: "));
+        DEBUG_SERIAL.print(gyro.gyro.x);
+        DEBUG_SERIAL.print(F(" Y: "));
+        DEBUG_SERIAL.print(gyro.gyro.y);
+        DEBUG_SERIAL.print(F(" Z: "));
+        DEBUG_SERIAL.print(gyro.gyro.z);
+        DEBUG_SERIAL.println(F(" radians/s "));
+      }
     #endif
   #endif //IMU
 
   #ifdef REMOTE
     if (mySwitch.available()) {
       #ifdef DEBUG_SERIAL
-        DEBUG_SERIAL.print("Received ");
-        DEBUG_SERIAL.print( mySwitch.getReceivedValue() );
-        DEBUG_SERIAL.print(" / ");
-        DEBUG_SERIAL.print( mySwitch.getReceivedBitlength() );
-        DEBUG_SERIAL.print("bit ");
-        DEBUG_SERIAL.print("Protocol: ");
-        DEBUG_SERIAL.println( mySwitch.getReceivedProtocol() );
+        if (debug & PRINT_REMOTE){
+          DEBUG_SERIAL.print(F("Received "));
+          DEBUG_SERIAL.print(mySwitch.getReceivedValue());
+          DEBUG_SERIAL.print(F(" / "));
+          DEBUG_SERIAL.print(mySwitch.getReceivedBitlength());
+          DEBUG_SERIAL.print(F("bit "));
+          DEBUG_SERIAL.print(F("Protocol: "));
+          DEBUG_SERIAL.println(mySwitch.getReceivedProtocol());
+        }
       #endif
 
       switch(mySwitch.getReceivedValue()){
         case REMOTE_BUTTON1:
+          DEBUG_SERIAL.println(F("Button 1 pressed"));
           hoverserial.setCtrlTyp(FOC_CTRL);
           break;
         case REMOTE_BUTTON2:
+          DEBUG_SERIAL.println(F("Button 2 pressed"));
           hoverserial.setCtrlTyp(SIN_CTRL);
           break;
         case REMOTE_BUTTON3:
+          DEBUG_SERIAL.println(F("Button 3 pressed"));
           hoverserial.setCtrlTyp(COM_CTRL);
           break;
         case REMOTE_BUTTON4:
+          DEBUG_SERIAL.println(F("Button 4 pressed"));
           break;
       }
 
@@ -205,6 +281,7 @@ void loop(){
       if (iTest >= SPEED_MAX_TEST || iTest <= -SPEED_MAX_TEST)
         iStep *= -1;
     #else
+      hoverserial.setCmd1(0);
       hoverserial.setCmd2(0);
     #endif
     hoverserial.send();

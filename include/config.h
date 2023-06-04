@@ -4,8 +4,11 @@
 
 
 // SEGGER RTT Debug
-//#define DEBUG_SERIAL rtt              // Uncomment to enable DEBUG
+#define DEBUG_SERIAL rtt // Uncomment to enable DEBUG
 #ifdef DEBUG_SERIAL
+  #undef BUFFER_SIZE_UP
+  #define BUFFER_SIZE_UP (512)  // Size of the buffer for terminal output of target, up to host (Default: 1k)
+
   #undef Serial
   #define Serial rtt
 #endif
@@ -19,7 +22,7 @@
 #define TIME_SEND           100         // [ms] Sending time interval
 
 // 433Mhz RF Remote
-//#define REMOTE                          // Uncomment to enable 433Mhz Receiver. 
+#define REMOTE                          // Uncomment to enable 433Mhz Receiver. 
 #ifdef REMOTE 
   #define REMOTE_BUTTON1 6637793
   #define REMOTE_BUTTON2 6637794
