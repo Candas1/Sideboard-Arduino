@@ -21,11 +21,11 @@ I am only using Platformio, I cannot support other IDEs.<br>
 * Press the 'PlatformIO:Upload' button (bottom left in vscode) to build and upload the firmwware
 
 ### Debug
-Enable debug by uncommenting DEBUG_SERIAL in the config.h file.
-[SEGGER RTT](https://www.segger.com/products/debug-probes/j-link/technology/about-real-time-transfer/) let's you debug without the need for an USART to USB bridge. It uses the STLINK and the programming pins. Only downside is that you need to make sure you stop the rtt connection before flashing. <br>
-[This](https://www.youtube.com/watch?v=_vNCye_IlYU) video shows how to use it for monitoring in Platformio.
-
-The debug menu options depend on what features are enabled in config.h
+Enable debug by uncommenting DEBUG_SERIAL in the config.h file.<br>
+[SEGGER RTT](https://www.segger.com/products/debug-probes/j-link/technology/about-real-time-transfer/) let's you debug without the need for an USART to USB bridge. It uses the STLINK and the programming pins.<br>
+Only downside is that you need to make sure you stop the rtt connection before flashing.<br>
+[This](https://www.youtube.com/watch?v=_vNCye_IlYU) video shows how to use it for monitoring in Platformio.<br>
+The debug menu options depend on what features are enabled in config.h.<br>
 
 ```
 === HELP ===
@@ -41,10 +41,10 @@ t: Print Temperature
 ```
 
 ### Remote
-Some of the sideboards have a 433Mhz receiver and a remote.
-You can enable this feature by uncommenting REMOTE in the config.h file.
-To identify the code of each remote button, enable [DEBUG](https://github.com/Candas1/Sideboard-Arduino#debug) and use the r command to see the remote output.
-Update the button codes in the config.h file.
+Some of the sideboards have a 433Mhz receiver and a remote.<br>
+You can enable this feature by uncommenting REMOTE in the config.h file.<br>
+To identify the code of each remote button, enable [DEBUG](https://github.com/Candas1/Sideboard-Arduino#debug) and use the r command to see the remote output.<br>
+Update the button codes in the config.h file.<br>
 
 ```
 #define REMOTE_BUTTON1 6637793        // Switch to FOC control type
