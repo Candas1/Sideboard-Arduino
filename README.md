@@ -65,7 +65,7 @@ This is a very early development so it requires more testing and documentation.<
 | Sensors                  |✔️        |✔️       |                          |
 | Segger RTT debug         |✔️        |✔️       |                          |
 | Usart command send       |✔️        |✔️       |                          |
-| Usart feedback receive   |✔️        |Stops after a few seconds ([issue](https://github.com/CommunityGD32Cores/ArduinoCore-GD32/issues/76))       |                          |
+| Usart feedback receive   |✔️        |Stops working after some time ([issue](https://github.com/CommunityGD32Cores/ArduinoCore-GD32/issues/76))       |                          |
 | 433mhz remote            |✔️        |✔️       |                          |
 | MPU6050 raw data         |✔️        |          |                          |
 | MPU6050A raw data        |           |          | Different WHOAMI        |
@@ -76,4 +76,3 @@ This is a very early development so it requires more testing and documentation.<
 | SimpleFOC trapezoidal    |        |          | Needs Pwm/timers to work                         |
 | SimpleFOC Sinusoidal     |        |          | Needs [sensor smoothing](https://community.simplefoc.com/t/smoothingsensor-experimental-sensor-angle-extrapoltion/3105) |
 | SimpleFOC FOC            |        |          | Needs 2 shunt current sensing to work              |
-
