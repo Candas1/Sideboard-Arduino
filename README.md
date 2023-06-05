@@ -72,7 +72,7 @@ This is a very early development so it requires more testing and documentation.<
 | MPU6050C raw data        |✔️        |          |                          |
 | MPU6052C raw data        |❌        |❌       | Requires [I2C single byte](https://github.com/EFeru/hoverboard-sideboard-hack-STM/pull/10) |
 | ICM-20X raw data         |         |          | Try [this](https://github.com/adafruit/Adafruit_ICM20X)                         |
-| Pitch/Roll angle calculation    |           |          | Use [this](https://github.com/arduino-libraries/MadgwickAHRS)?                         |
+| Pitch/Roll angle calculation    |           |          | Use [this](https://github.com/adafruit/Adafruit_AHRS)?                         |
 | SimpleFOC trapezoidal    |        |          | Needs Pwm/timers to work                         |
 | SimpleFOC Sinusoidal     |        |          | Needs [sensor smoothing](https://community.simplefoc.com/t/smoothingsensor-experimental-sensor-angle-extrapoltion/3105) |
 | SimpleFOC FOC            |        |          | Needs 2 shunt current sensing to work              |
