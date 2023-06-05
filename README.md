@@ -73,6 +73,6 @@ This is a very early development so it requires more testing and documentation.<
 | MPU6052C raw data        |❌        |❌       | Requires [I2C single byte](https://github.com/EFeru/hoverboard-sideboard-hack-STM/pull/10) |
 | ICM-20X raw data         |         |          | Try [this](https://github.com/adafruit/Adafruit_ICM20X)                         |
 | Pitch/Roll angle calculation    |           |          | Use [this](https://github.com/adafruit/Adafruit_AHRS)?                         |
-| SimpleFOC trapezoidal    |        |          | Needs SPL drivers for Pwm/timers to work                         |
+| SimpleFOC trapezoidal    |        |          | Needs SPL drivers for Pwm/timers to work<br> Should already work on STM32 splitboards                         |
 | SimpleFOC Sinusoidal     |        |          | Needs [sensor smoothing](https://community.simplefoc.com/t/smoothingsensor-experimental-sensor-angle-extrapoltion/3105) |
 | SimpleFOC FOC            |        |          | Needs [2 shunt current sensing](https://docs.simplefoc.com/low_side_current_sense#measuring-2-out-of-3-currents) and SPL driver for ADC       |
