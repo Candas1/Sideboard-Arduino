@@ -63,7 +63,7 @@ This is a very early development so it requires more testing and documentation.<
 |--------------------------|-----------|----------|--------------------------| 
 | Leds                     |✔️        |✔️       |                          |
 | Sensors                  |✔️        |✔️       |                          |
-| Segger RTT debug         |✔️        |✔️       |                          |
+| Segger RTT debug         |✔️        |✔️       | Use simpleFOC commander custom commands ?                         |
 | Usart command send       |✔️        |✔️       |                          |
 | Usart feedback receive   |✔️        |Stops working after some time ([issue](https://github.com/CommunityGD32Cores/ArduinoCore-GD32/issues/76))       |                          |
 | 433mhz remote            |✔️        |✔️       |                          |
