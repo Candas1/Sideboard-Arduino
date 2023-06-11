@@ -65,9 +65,9 @@ This is a very early development so it requires more testing and documentation.<
 | Sensors                  |✔️        |✔️       |                          |
 | Segger RTT debug         |✔️        |✔️       | Use simpleFOC commander custom commands ?                         |
 | Usart command send       |✔️        |✔️       |                          |
-| Usart feedback receive   |✔️        |Stops working after some time ([issue](https://github.com/CommunityGD32Cores/ArduinoCore-GD32/issues/76))       |                          |
+| Usart feedback receive   |✔️        |Stops working after some time ([issue](https://github.com/CommunityGD32Cores/ArduinoCore-GD32/issues/76)),fix to be tested       |                          |
 | 433mhz remote            |✔️        |✔️       |                          |
-| MPU6050 raw data         |✔️        |          |                          |
+| MPU6050 raw data         |✔️        | I2c fix to be tested ([issue](https://github.com/CommunityGD32Cores/ArduinoCore-GD32/issues/99))         |                          |
 | MPU6050A raw data        |           |          | Different WHOAMI        |
 | MPU6050C raw data        |✔️        |          |                          |
 | MPU6052C raw data        |❌        |❌       | Requires [I2C single byte](https://github.com/EFeru/hoverboard-sideboard-hack-STM/pull/10) |
