@@ -2,11 +2,11 @@
 #ifndef DEFINES_H
 #define DEFINES_H
 
-#define LED1_PIN    PA0 // RED
-#define LED2_PIN    PB9 // GREEN
-#define LED3_PIN    PB8 // YELLOW
-#define LED4_PIN    PB5 // BLUE1
-#define LED5_PIN    PB4 // BLUE2
+#define LED_RED_PIN      PA0 // RED
+#define LED_GREEN_PIN    PB9 // GREEN
+#define LED_YELLOW_PIN  PB8 // YELLOW
+#define LED_UP_PIN       PB5 // BLUE1
+#define LED_DOWN_PIN     PB4 // BLUE2
 
 #define RECEIVER_PIN    PC15 // REMOTE
 
@@ -22,13 +22,14 @@
 #define PRINT_EULER                 (0x08)
 #define PRINT_TEMP                  (0x10)
 #define PRINT_REMOTE                (0x20)
-#define PRINT_SERIAL                (0x40)
+#define PRINT_SERIAL_IN             (0x40)
+#define PRINT_SERIAL_OUT            (0x80)
 
-#define LED1_SET                    (0x01)
-#define LED2_SET                    (0x02)
-#define LED3_SET                    (0x04)
-#define LED4_SET                    (0x08)
-#define LED5_SET                    (0x10)
+#define LED_RED_SET                 (0x01)
+#define LED_GREEN_SET               (0x02)
+#define LED_YELLOW_SET              (0x04)
+#define LED_UP_SET                  (0x08)
+#define LED_DOWN_SET                (0x10)
 
 #define NO 0
 #define YES 1

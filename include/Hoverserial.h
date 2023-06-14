@@ -51,6 +51,7 @@ class Hoverserial
     void setLock(uint8_t lock);
     void send(void);
     void receive(void);
+    void test(void);
   private:
     int16_t _cmd1;
     int16_t _cmd2;
@@ -67,6 +68,8 @@ class Hoverserial
     byte *_p;                                // Pointer declaration for the new received data
     byte _incomingByte;
     byte _incomingBytePrev;
+    int _iTest;
+    int _iStep;
 };
 
 #endif
