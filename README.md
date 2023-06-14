@@ -26,19 +26,7 @@ Enable debug by uncommenting DEBUG_SERIAL in the config.h file.<br>
 Only downside is that you need to make sure you stop the rtt connection before flashing.<br>
 [This](https://www.youtube.com/watch?v=_vNCye_IlYU) video shows how to use it for monitoring in Platformio.<br>
 The debug menu options depend on what features are enabled in config.h.<br>
-
-```
-=== HELP ===
-h: Print Help
-s: Print Serial
-r: Print Remote
-a: Print Accelerometer
-g: Print Gyroscope
-q: Print Quaternion
-e: Print Euler angles
-t: Print Temperature
-============
-```
+Type ? and enter in the serial monitor.
 
 ### Remote
 Some of the sideboards have a 433Mhz receiver and a remote.<br>
@@ -63,16 +51,17 @@ This is a very early development so it requires more testing and documentation.<
 |--------------------------|-----------|----------|--------------------------| 
 | Leds                     |✔️        |✔️       |                          |
 | Sensors                  |✔️        |✔️       |                          |
-| Segger RTT debug         |✔️        |✔️       | Use simpleFOC commander custom commands ?                         |
+| Segger RTT debug         |✔️        |✔️       |                          |
+| Simplefoc Commander      |✔️        |✔️       |                          |
 | Usart command send       |✔️        |✔️       |                          |
-| Usart feedback receive   |✔️        |Stops working after some time ([issue](https://github.com/CommunityGD32Cores/ArduinoCore-GD32/issues/76)),fix to be tested       |                          |
+| Usart feedback receive   |✔️        |✔️       |                          |
 | 433mhz remote            |✔️        |✔️       |                          |
-| MPU6050 raw data         |✔️        | I2c fix to be tested ([issue](https://github.com/CommunityGD32Cores/ArduinoCore-GD32/issues/99))         |                          |
+| MPU6050 raw data         |✔️        |❌       | Not working with GD32    |
 | MPU6050A raw data        |           |          | Different WHOAMI        |
 | MPU6050C raw data        |✔️        |          |                          |
 | MPU6052C raw data        |❌        |❌       | Requires [I2C single byte](https://github.com/EFeru/hoverboard-sideboard-hack-STM/pull/10) |
 | ICM-20X raw data         |         |          | Try [this](https://github.com/adafruit/Adafruit_ICM20X)                         |
-| Pitch/Roll angle calculation    |           |          | Use [this](https://github.com/adafruit/Adafruit_AHRS)?                         |
+| Pitch/Roll angle calculation    | 🚧          | 🚧         | Use [this](https://github.com/adafruit/Adafruit_AHRS)?                         |
 | SimpleFOC trapezoidal    |        |          | Needs a new GD32 driver (work in progress [here](https://github.com/Candas1/Arduino-FOC/tree/master/src))<br> Should already work on STM32 splitboards                         |
 | SimpleFOC Sinusoidal     |        |          | Needs [sensor smoothing](https://community.simplefoc.com/t/smoothingsensor-experimental-sensor-angle-extrapoltion/3105), already in dev branch of SimpleFOC |
 | SimpleFOC FOC            |        |          | Needs a new GD32 driver for current sensing       |
