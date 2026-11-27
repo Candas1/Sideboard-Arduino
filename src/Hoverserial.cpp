@@ -31,15 +31,11 @@ Hoverserial::Hoverserial(Stream &serial) : _serial(serial) {
 }
 
 void Hoverserial::setCmd1(int16_t cmd1){
-  if IN_RANGE(cmd1,-1000,1000){  
-    _cmd1 = cmd1;
-  }
+  _cmd1 = CLAMP(cmd1,-1000,1000);
 }
 
 void Hoverserial::setCmd2(int16_t cmd2){
-  if IN_RANGE(cmd2,-1000,1000){  
-    _cmd2 = cmd2;
-  }
+  _cmd2 = CLAMP(cmd2,-1000,1000);
 }
 
 void Hoverserial::setCtrlMod(ctrlMod_t ctrlMod){
@@ -55,20 +51,14 @@ void Hoverserial::setCtrlTyp(ctrlTyp_t ctrlTyp){
 }
 
 void Hoverserial::setFieldWeak(uint8_t fieldWeak){
-  if IN_RANGE(fieldWeak,0,1){  
-    _fieldWeak = fieldWeak;
-  }
+  _fieldWeak = fieldWeak ? 1 : 0;
 }
 
 void Hoverserial::setAux(uint8_t aux){
-  if IN_RANGE(aux,0,1){  
-    _aux = aux;
-  }
+  _aux = aux ? 1 : 0;
 }
 void Hoverserial::setLock(uint8_t lock){
-  if IN_RANGE(lock,0,1){  
-    _lock = lock;
-  }
+  _lock = lock ? 1 : 0;
 }
 
 // pitch: [deg*100], dPitch: raw gyro Y at 2000 deg/s FSR (same as hoverboard-sideboard-hack-STM)
