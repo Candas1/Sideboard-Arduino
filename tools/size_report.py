@@ -1,19 +1,25 @@
 #!/usr/bin/env python3
-"""Flash use per component from a GNU ld map file.
+"""Flash use per component from a GNU ld map file, optionally compared with a base.
 
-Usage: python tools/size_report.py .pio/build/<env>/firmware.map [title]
+Per build:
+    python tools/size_report.py MAP TITLE [--json OUT.json] [--base BASE.json]
+Summary of several builds (JSON files written with --json, searched recursively):
+    python tools/size_report.py --summary CUR_DIR [--base-dir BASE_DIR]
 
 Build with the map enabled, e.g.:
     PLATFORMIO_BUILD_FLAGS="-Wl,-Map,.pio/build/<env>/firmware.map" pio run -e <env>
 
 Counts input sections that end up in flash (code, constants, .data init
 values, vectors); RAM-only (.bss, .noinit, COMMON) and debug sections are
-skipped. Prints a markdown table, largest first.
+skipped. Prints markdown tables, largest first.
 """
 
+import argparse
 import collections
+import glob
+import json
+import os
 import re
-import sys
 
 LINE = re.compile(r"^\s*(\S+)?\s+0x([0-9a-fA-F]+)\s+0x([0-9a-fA-F]+)\s+(\S.*)$")
 RAM_ONLY = (".bss", ".noinit", "COMMON", ".heap", "._user_heap_stack", ".stack")
@@ -72,17 +78,86 @@ def parse(map_path):
     return sizes
 
 
-def main():
-    if len(sys.argv) < 2:
-        sys.exit(__doc__)
-    sizes = parse(sys.argv[1])
+def delta(cur, base):
+    if base is None:
+        return ""
+    d = cur - base
+    return f"{d:+d}" if d else "0"
+
+
+def report(args):
+    sizes = parse(args.map)
     total = sum(sizes.values())
-    title = sys.argv[2] if len(sys.argv) > 2 else sys.argv[1]
-    print(f"### Flash by component: {title}\n")
-    print("| Component | Bytes | % |\n|---|---:|---:|")
-    for name, size in sizes.most_common():
-        print(f"| {name} | {size} | {100.0 * size / total:.1f} |")
-    print(f"| **total** | **{total}** | |\n")
+    base = None
+    if args.base and os.path.exists(args.base):
+        with open(args.base) as f:
+            base = json.load(f)
+    if args.json:
+        with open(args.json, "w") as f:
+            json.dump({"title": args.title, "total": total, "components": dict(sizes)}, f, indent=1)
+
+    has_base = base is not None
+    bc = base["components"] if has_base else {}
+    print(f"### Flash by component: {args.title}\n")
+    if has_base:
+        print("| Component | Bytes | vs base | % |\n|---|---:|---:|---:|")
+    else:
+        print("| Component | Bytes | % |\n|---|---:|---:|")
+    names = [n for n, _ in sizes.most_common()] + sorted(set(bc) - set(sizes))  # removed components last
+    for name in names:
+        size = sizes.get(name, 0)
+        pct = f"{100.0 * size / total:.1f}" if total else "0"
+        if has_base:
+            print(f"| {name} | {size} | {delta(size, bc.get(name, 0))} | {pct} |")
+        else:
+            print(f"| {name} | {size} | {pct} |")
+    if has_base:
+        print(f"| **total** | **{total}** | **{delta(total, base['total'])}** | |\n")
+    else:
+        print(f"| **total** | **{total}** | |\n")
+
+
+def load_dir(d):
+    out = {}
+    for p in glob.glob(os.path.join(d, "**", "*.json"), recursive=True):
+        with open(p) as f:
+            j = json.load(f)
+        out[j["title"]] = j["total"]
+    return out
+
+
+def summary(args):
+    cur = load_dir(args.summary)
+    base = load_dir(args.base_dir) if args.base_dir and os.path.isdir(args.base_dir) else {}
+    print("### Flash total per build\n")
+    if base:
+        print("| Build | Bytes | vs base |\n|---|---:|---:|")
+    else:
+        print("| Build | Bytes |\n|---|---:|")
+    for title in sorted(cur):
+        if base:
+            print(f"| {title} | {cur[title]} | {delta(cur[title], base.get(title))} |")
+        else:
+            print(f"| {title} | {cur[title]} |")
+    print()
+
+
+def main():
+    p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    p.add_argument("map", nargs="?", help="linker map file")
+    p.add_argument("title", nargs="?", help="title for the table / key in the JSON")
+    p.add_argument("--json", help="write the sizes to this JSON file")
+    p.add_argument("--base", help="JSON from a previous build to compare with")
+    p.add_argument("--summary", metavar="DIR", help="print one table from the JSON files in DIR")
+    p.add_argument("--base-dir", help="with --summary: JSON files of the base")
+    args = p.parse_args()
+    if args.summary:
+        summary(args)
+    elif args.map:
+        args.title = args.title or args.map
+        report(args)
+    else:
+        p.error("MAP or --summary is required")
 
 
 if __name__ == "__main__":
