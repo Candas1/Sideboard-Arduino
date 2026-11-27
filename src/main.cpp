@@ -55,15 +55,6 @@
   #ifdef REMOTE
   void onCmdRemote(char* cmd){ debug ^= PRINT_REMOTE; }
   #endif
-  #ifdef IMU  
-    void onCmdAccel(char* cmd){ debug ^= PRINT_ACCEL;}
-    void onCmdGyro(char* cmd){ debug ^= PRINT_GYRO;}
-    void onCmdTemp(char* cmd){ debug ^= PRINT_TEMP; }
-    #ifdef AHRS
-      void onCmdQuat(char* cmd){ debug ^= PRINT_QUAT; }
-      void onCmdEuler(char* cmd){ debug ^= PRINT_EULER; }
-    #endif    
-  #endif //IMU
 #endif
 
 #ifdef DEBUG_SERIAL
@@ -209,15 +200,6 @@ void setup(){
       commander.add('r',onCmdRemote,"Print Remote");
     #endif
 
-    #ifdef IMU
-      commander.add('a',onCmdAccel,"Print Accelerometer");
-      commander.add('g',onCmdGyro,"Print Gyroscope");
-      commander.add('t',onCmdTemp,"Print Temperature");
-      #ifdef AHRS
-        commander.add('q',onCmdQuat,"Print Quaternions");
-        commander.add('e',onCmdEuler,"Print Euler Angles");
-      #endif
-    #endif
     DEBUG_SERIAL.println(F("Hoverboard Serial v1.0"));
   #endif
 
@@ -273,64 +255,6 @@ void loop(){
   if (timeNow - iTimeSend < TIME_SEND) return;   // wrap-safe
   iTimeSend = timeNow;
   
-  #ifdef IMU
-    if (imu_found){
-      #ifdef DEBUG_SERIAL
-        if (debug & PRINT_TEMP){
-          DEBUG_SERIAL.print(F("Temperature "));
-          DEBUG_SERIAL.print(temp.temperature);
-          DEBUG_SERIAL.println(F(" deg C"));
-        }
-        
-        if (debug & PRINT_ACCEL){
-          /* Display the results (acceleration is measured in m/s^2) */
-          DEBUG_SERIAL.print(F("Accel X: "));
-          DEBUG_SERIAL.print(accel.acceleration.x);
-          DEBUG_SERIAL.print(F(" Y: "));
-          DEBUG_SERIAL.print(accel.acceleration.y);
-          DEBUG_SERIAL.print(F(" Z: "));
-          DEBUG_SERIAL.print(accel.acceleration.z);
-          DEBUG_SERIAL.println(F(" m/s^2 "));
-        }
-
-        if (debug & PRINT_GYRO){
-          /* Display the results (rotation is measured in rad/s) */
-          DEBUG_SERIAL.print(F("Gyro X: "));
-          DEBUG_SERIAL.print(gyro.gyro.x);
-          DEBUG_SERIAL.print(F(" Y: "));
-          DEBUG_SERIAL.print(gyro.gyro.y);
-          DEBUG_SERIAL.print(F(" Z: "));
-          DEBUG_SERIAL.print(gyro.gyro.z);
-          DEBUG_SERIAL.println(F(" radians/s "));
-        }
-        
-        #ifdef AHRS
-          if (debug & PRINT_QUAT){
-            float qw, qx, qy, qz;
-            filter.getQuaternion(&qw, &qx, &qy, &qz);
-            DEBUG_SERIAL.print(F("qW: "));
-            DEBUG_SERIAL.print(qw);
-            DEBUG_SERIAL.print(F(" qX: "));
-            DEBUG_SERIAL.print(qx);
-            DEBUG_SERIAL.print(F(" qY: "));
-            DEBUG_SERIAL.print(qy);
-            DEBUG_SERIAL.print(F(" qZ: "));
-            DEBUG_SERIAL.println(qz);
-          }
-
-          if (debug & PRINT_EULER){
-            DEBUG_SERIAL.print(F("Roll: "));
-            DEBUG_SERIAL.print(filter.getRoll());
-            DEBUG_SERIAL.print(F(" Pitch: "));
-            DEBUG_SERIAL.print(filter.getPitch());
-            DEBUG_SERIAL.print(F(" Yaw: "));
-            DEBUG_SERIAL.println(filter.getYaw());
-          }
-        #endif //AHRS
-      #endif
-    }
-  #endif //IMU
-
   #ifdef REMOTE
     if (mySwitch.available()) {
       #ifdef DEBUG_SERIAL
