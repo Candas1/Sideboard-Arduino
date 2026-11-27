@@ -1,6 +1,6 @@
 #include <Arduino.h>
 #include <Stream.h>
-#include "Defines.h"
+#include "defines.h"
 #include "Hoverserial.h"
 #include "config.h"
 

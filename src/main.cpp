@@ -1,6 +1,6 @@
 #include <Arduino.h>
-#include <Defines.h>
-#include <Config.h>
+#include <defines.h>
+#include <config.h>
 #include <SimpleFOC.h>
 
 #ifdef HOVER_SERIAL
