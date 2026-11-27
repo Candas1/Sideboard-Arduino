@@ -190,9 +190,7 @@ void loop(){
     if (imu_found && (millis() - iTimeImu >= TIME_IMU)){
       iTimeImu += TIME_IMU;
       if (millis() - iTimeImu >= TIME_IMU) iTimeImu = millis();   // fell behind (e.g. at boot): resync, don't burst
-      mpu_temp->getEvent(&temp);
-      mpu_accel->getEvent(&accel);
-      mpu_gyro->getEvent(&gyro);
+      mpu.getEvent(&accel, &gyro, &temp);   // one I2C burst instead of three
 
       #ifdef AHRS
         filter.updateIMU(gyro.gyro.x * 57.29578f, 
