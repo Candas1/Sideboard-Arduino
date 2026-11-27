@@ -87,8 +87,9 @@ void printTelemetryHeader(){
   DEBUG_SERIAL.println();
 }
 
-#define TELEM(v)    do { DEBUG_SERIAL.print(','); DEBUG_SERIAL.print(v); } while (0)
-#define TELEMF(v)   do { DEBUG_SERIAL.print(','); DEBUG_SERIAL.print(v, 3); } while (0)
+// Functions, not macros: one print call each keeps flash use low (GD32F130C6: 32 KB)
+static void TELEM(long v)  { DEBUG_SERIAL.print(','); DEBUG_SERIAL.print(v); }
+static void TELEMF(float v){ DEBUG_SERIAL.print(','); DEBUG_SERIAL.print(v, 3); }
 
 void printTelemetry(){
   DEBUG_SERIAL.print(F("$T,"));
