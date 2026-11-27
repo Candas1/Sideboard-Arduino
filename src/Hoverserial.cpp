@@ -20,6 +20,9 @@ Hoverserial::Hoverserial(Stream &serial) : _serial(serial) {
     _fieldWeak = 0;
     _aux = 0;
     _lock = 0;
+    _pitch = 0;
+    _dPitch = 0;
+    _imuStatus = 0;
     _serial = serial;
     _idx = 0;
   #ifdef TEST
@@ -69,6 +72,16 @@ void Hoverserial::setLock(uint8_t lock){
   }
 }
 
+// pitch: [deg*100], dPitch: raw gyro Y at 2000 deg/s FSR (same as hoverboard-sideboard-hack-STM)
+void Hoverserial::setPitch(int16_t pitch, int16_t dPitch){
+  _pitch = pitch;
+  _dPitch = dPitch;
+}
+
+void Hoverserial::setImuStatus(uint8_t ok){
+  _imuStatus = ok ? 1 : 0;
+}
+
 void Hoverserial::send(){
 
   SerialCommand Command;
@@ -80,11 +93,11 @@ void Hoverserial::send(){
                                      
   // Create command
   Command.start   = (uint16_t)START_FRAME;
-  Command.pitch   = 0;
-  Command.dPitch  = 0;
+  Command.pitch   = _pitch;
+  Command.dPitch  = _dPitch;
   Command.cmd1    = _cmd1;
   Command.cmd2    = _cmd2;
-  Command.sensors = (uint16_t)( (cmdSwitch << 8)  | (digitalRead(SENSOR1_PIN) | (digitalRead(SENSOR2_PIN) << 1) | (0 << 2)) );
+  Command.sensors = (uint16_t)( (cmdSwitch << 8)  | (digitalRead(SENSOR1_PIN) | (digitalRead(SENSOR2_PIN) << 1) | (_imuStatus << 2)) );
   Command.checksum = (uint16_t)(Command.start ^ Command.pitch ^ Command.dPitch ^ Command.cmd1 ^ Command.cmd2 ^ Command.sensors);
   
   // Write to Serial

@@ -28,6 +28,7 @@
 #endif
 
 #define TIME_SEND           100         // [ms] Sending time interval
+#define TIME_IMU            10          // [ms] IMU read / AHRS update interval (fixed rate for the filter)
 
 // 433Mhz RF Remote
 #ifdef REMOTE 

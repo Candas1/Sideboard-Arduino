@@ -99,6 +99,10 @@ void setup(){
     mySwitch.enableReceive(digitalPinToInterrupt(RECEIVER_PIN));  // Receiver on interrupt
   #endif
   
+  #if defined(IMU) && defined(AHRS)
+    filter.begin(1000.0f / TIME_IMU);   // [Hz] filter is updated every TIME_IMU ms
+  #endif
+
   #ifdef IMU
     #ifdef MPU6050
     if (!mpu.begin()){
@@ -163,6 +167,12 @@ void setup(){
 // ########################## LOOP ##########################
 
 unsigned long iTimeSend = 0;
+#ifdef IMU
+  unsigned long iTimeImu = 0;
+  sensors_event_t accel;
+  sensors_event_t gyro;
+  sensors_event_t temp;
+#endif
 
 void loop(){
 
@@ -176,10 +186,10 @@ void loop(){
   #endif
   
   #ifdef IMU
-    sensors_event_t accel;
-    sensors_event_t gyro;
-    sensors_event_t temp;
-    if (imu_found){ 
+    // Fixed-rate IMU update: the AHRS filter assumes 1000/TIME_IMU Hz
+    if (imu_found && (millis() - iTimeImu >= TIME_IMU)){
+      iTimeImu += TIME_IMU;
+      if (millis() - iTimeImu >= TIME_IMU) iTimeImu = millis();   // fell behind (e.g. at boot): resync, don't burst
       mpu_temp->getEvent(&temp);
       mpu_accel->getEvent(&accel);
       mpu_gyro->getEvent(&gyro);
@@ -197,8 +207,8 @@ void loop(){
 
   // Delay
   unsigned long timeNow = millis();
-  if (iTimeSend > timeNow) return;
-  iTimeSend = timeNow + TIME_SEND;
+  if (timeNow - iTimeSend < TIME_SEND) return;   // wrap-safe
+  iTimeSend = timeNow;
   
   #ifdef IMU
     if (imu_found){
@@ -310,6 +320,15 @@ void loop(){
   #endif
 
   #ifdef HOVER_SERIAL
+    #ifdef IMU
+      hoverserial.setImuStatus(imu_found);
+      #ifdef AHRS
+        if (imu_found){
+          hoverserial.setPitch((int16_t)(filter.getPitch() * 100.0f),             // [deg*100]
+                               (int16_t)CLAMP(gyro.gyro.y * 57.29578f * 16.4f, -32768.0f, 32767.0f)); // raw LSB at 2000 deg/s
+        }
+      #endif
+    #endif
     #ifdef TEST
       hoverserial.test();
     #else

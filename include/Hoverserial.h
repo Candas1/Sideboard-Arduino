@@ -50,6 +50,8 @@ class Hoverserial
     void setFieldWeak(uint8_t fieldWeak);
     void setAux(uint8_t aux);
     void setLock(uint8_t lock);
+    void setPitch(int16_t pitch, int16_t dPitch);
+    void setImuStatus(uint8_t ok);
     void send(void);
     void receive(void);
   #ifdef TEST
@@ -63,6 +65,9 @@ class Hoverserial
     uint8_t _fieldWeak;
     uint8_t _aux;
     uint8_t _lock;
+    int16_t _pitch;
+    int16_t _dPitch;
+    uint8_t _imuStatus;
     Stream &_serial;
     SerialFeedback _Feedback;
     SerialFeedback _NewFeedback;
