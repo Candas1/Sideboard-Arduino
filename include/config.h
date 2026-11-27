@@ -19,6 +19,7 @@
 // Hover serial protocol
 #ifdef HOVER_SERIAL
   #define HOVER_SERIAL_BAUD   115200    // [-] Baud rate for HoverSerial (used to communicate with the hoverboard)
+  #define FEEDBACK_TIMEOUT    600       // [ms] No valid feedback frame for this long = link lost
 #endif
 
 // Test

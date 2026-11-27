@@ -164,6 +164,36 @@ void setup(){
 }
 
 
+// ########################## LEDS ##########################
+// With a mainboard link, the mainboard owns the LEDs (cmdLed). Without one
+// (as hoverboard-sideboard-hack-STM): yellow blinks = no valid feedback,
+// red blinks = IMU not found, green = IMU OK. Called every TIME_SEND ms.
+static void writeLeds(uint16_t leds){
+  digitalWrite(LED_RED_PIN,    leds & LED_RED_SET    ? HIGH : LOW);
+  digitalWrite(LED_GREEN_PIN,  leds & LED_GREEN_SET  ? HIGH : LOW);
+  digitalWrite(LED_YELLOW_PIN, leds & LED_YELLOW_SET ? HIGH : LOW);
+  digitalWrite(LED_UP_PIN,     leds & LED_UP_SET     ? HIGH : LOW);
+  digitalWrite(LED_DOWN_PIN,   leds & LED_DOWN_SET   ? HIGH : LOW);
+}
+
+void handleLeds(){
+  static bool blink = false;
+  blink = !blink;
+  uint16_t leds = 0;
+  #ifdef HOVER_SERIAL
+    if (hoverserial.feedbackOk()){
+      writeLeds(hoverserial.getCmdLed());
+      return;
+    }
+    if (blink) leds |= LED_YELLOW_SET;
+  #endif
+  #ifdef IMU
+    if (imu_found)  leds |= LED_GREEN_SET;
+    else if (blink) leds |= LED_RED_SET;
+  #endif
+  writeLeds(leds);
+}
+
 // ########################## LOOP ##########################
 
 unsigned long iTimeSend = 0;
@@ -335,4 +365,6 @@ void loop(){
     #endif
     hoverserial.send();
   #endif
+
+  handleLeds();
 }

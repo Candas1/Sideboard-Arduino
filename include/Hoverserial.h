@@ -54,6 +54,8 @@ class Hoverserial
     void setImuStatus(uint8_t ok);
     void send(void);
     void receive(void);
+    bool feedbackOk(void);                                        // valid frame within FEEDBACK_TIMEOUT
+    uint16_t getCmdLed(void) { return _Feedback.cmdLed; }         // LEDs requested by the mainboard
   #ifdef TEST
     void test(void);
   #endif
@@ -76,6 +78,8 @@ class Hoverserial
     byte *_p;                                // Pointer declaration for the new received data
     byte _incomingByte;
     byte _incomingBytePrev;
+    bool _feedbackValid;
+    unsigned long _lastFeedbackMs;
   #ifdef TEST
     int _iTest;
     int _iStep;
