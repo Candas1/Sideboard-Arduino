@@ -3,6 +3,7 @@
 
 #include <Arduino.h>
 #include <Stream.h>
+#include "config.h"
 
 typedef enum{
     FOC_CTRL,
@@ -51,7 +52,9 @@ class Hoverserial
     void setLock(uint8_t lock);
     void send(void);
     void receive(void);
+  #ifdef TEST
     void test(void);
+  #endif
   private:
     int16_t _cmd1;
     int16_t _cmd2;
@@ -68,8 +71,10 @@ class Hoverserial
     byte *_p;                                // Pointer declaration for the new received data
     byte _incomingByte;
     byte _incomingBytePrev;
+  #ifdef TEST
     int _iTest;
     int _iStep;
+  #endif
 };
 
 #endif

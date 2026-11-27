@@ -22,8 +22,10 @@ Hoverserial::Hoverserial(Stream &serial) : _serial(serial) {
     _lock = 0;
     _serial = serial;
     _idx = 0;
+  #ifdef TEST
     _iTest = 0;
-    _iStep = SPEED_STEP; 
+    _iStep = SPEED_STEP;
+  #endif
 }
 
 void Hoverserial::setCmd1(int16_t cmd1){
@@ -173,6 +175,7 @@ void Hoverserial::receive(){
   }
 }
 
+#ifdef TEST
 void Hoverserial::test(){
   setCmd2(_iTest);
   // Calculate test command signal
@@ -182,3 +185,4 @@ void Hoverserial::test(){
   if (_iTest >= SPEED_MAX_TEST || _iTest <= -SPEED_MAX_TEST)
     _iStep *= -1;
 }
+#endif

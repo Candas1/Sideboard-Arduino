@@ -19,15 +19,15 @@ jobs:
           - name: default
             flags: ""
           - name: none
-            flags: "-UDEBUG_SERIAL -UHOVER_SERIAL -UTEST"
+            flags: "-UDEBUG_RTT -UHOVER_SERIAL -UTEST"
           - name: serial-no-test
             flags: "-UTEST"
           - name: serial-remote-nodebug
-            flags: "-UDEBUG_SERIAL -UTEST -DREMOTE"
+            flags: "-UDEBUG_RTT -UTEST -DREMOTE"
           - name: remote-no-serial
             flags: "-UHOVER_SERIAL -UTEST -DREMOTE"
           - name: mpu6050-ahrs-nodebug
-            flags: "-UDEBUG_SERIAL -DMPU6050 -DAHRS"
+            flags: "-UDEBUG_RTT -DMPU6050 -DAHRS"
           - name: icm20948-ahrs
             flags: "-DICM20948 -DAHRS"
           - name: all

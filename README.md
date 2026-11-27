@@ -21,7 +21,7 @@ I am only using Platformio, I cannot support other IDEs.<br>
 * Press the 'PlatformIO:Upload' button (bottom left in vscode) to build and upload the firmwware
 
 ### Debug
-Enable debug with DEBUG_SERIAL in the [features] section of platformio.ini.<br>
+Enable debug with DEBUG_RTT in the [features] section of platformio.ini.<br>
 [SEGGER RTT](https://www.segger.com/products/debug-probes/j-link/technology/about-real-time-transfer/) let's you debug without the need for an USART to USB bridge. It uses the STLINK and the programming pins.<br>
 Only downside is that you need to make sure you stop the rtt connection before flashing.<br>
 [This](https://www.youtube.com/watch?v=_vNCye_IlYU) video shows how to use it for monitoring in Platformio.<br>

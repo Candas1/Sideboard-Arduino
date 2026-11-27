@@ -278,15 +278,21 @@ void loop(){
       switch(mySwitch.getReceivedValue()){
         case REMOTE_BUTTON1:
           button_pressed = 1;
-          hoverserial.setCtrlTyp(FOC_CTRL);
+          #ifdef HOVER_SERIAL
+            hoverserial.setCtrlTyp(FOC_CTRL);
+          #endif
           break;
         case REMOTE_BUTTON2:
           button_pressed = 2;
-          hoverserial.setCtrlTyp(SIN_CTRL);
+          #ifdef HOVER_SERIAL
+            hoverserial.setCtrlTyp(SIN_CTRL);
+          #endif
           break;
         case REMOTE_BUTTON3:
           button_pressed = 3;
-          hoverserial.setCtrlTyp(COM_CTRL);
+          #ifdef HOVER_SERIAL
+            hoverserial.setCtrlTyp(COM_CTRL);
+          #endif
           break;
         case REMOTE_BUTTON4:
           button_pressed = 4;

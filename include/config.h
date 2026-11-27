@@ -4,11 +4,17 @@
 
 
 // Features are enabled with build_flags in platformio.ini ([features] section):
-//   DEBUG_SERIAL=rtt  SEGGER RTT debug
+//   DEBUG_RTT         SEGGER RTT debug
 //   HOVER_SERIAL      Send commands to the mainboard and receive feedback
 //   TEST              Send test commands to the mainboard (needs HOVER_SERIAL)
 //   REMOTE            433Mhz receiver
 //   MPU6050 / ICM20948, AHRS
+
+// Debug output stream. Defined here, not as a build flag, because libraries
+// (e.g. Adafruit BusIO) use their own DEBUG_SERIAL macro.
+#ifdef DEBUG_RTT
+  #define DEBUG_SERIAL rtt
+#endif
 
 // Hover serial protocol
 #ifdef HOVER_SERIAL
