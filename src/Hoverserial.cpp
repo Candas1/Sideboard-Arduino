@@ -24,6 +24,9 @@ Hoverserial::Hoverserial(Stream &serial) : _serial(serial) {
     _dPitch = 0;
     _imuStatus = 0;
     _idx = 0;
+    _feedbackValid = false;
+    _lastFeedbackMs = 0;
+    _Feedback.cmdLed = 0;
   #ifdef TEST
     _iTest = 0;
     _iStep = SPEED_STEP;
@@ -106,6 +109,10 @@ void Hoverserial::send(){
 
 }
 
+bool Hoverserial::feedbackOk(){
+  return _feedbackValid && (millis() - _lastFeedbackMs < FEEDBACK_TIMEOUT);
+}
+
 void Hoverserial::receive(){
     
   // Check for new data availability in the Serial buffer
@@ -146,12 +153,8 @@ void Hoverserial::receive(){
             }
           #endif
 
-          // handle Leds
-          digitalWrite(LED_RED_PIN,_Feedback.cmdLed & LED_RED_SET?HIGH:LOW);
-          digitalWrite(LED_GREEN_PIN,_Feedback.cmdLed & LED_GREEN_SET?HIGH:LOW);
-          digitalWrite(LED_YELLOW_PIN,_Feedback.cmdLed & LED_YELLOW_SET?HIGH:LOW);
-          digitalWrite(LED_UP_PIN,_Feedback.cmdLed & LED_UP_SET?HIGH:LOW);
-          digitalWrite(LED_DOWN_PIN,_Feedback.cmdLed & LED_DOWN_SET?HIGH:LOW);
+          _feedbackValid = true;
+          _lastFeedbackMs = millis();
             
         } else {
           #ifdef DEBUG_SERIAL
