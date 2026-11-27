@@ -30,6 +30,7 @@
 #define TIME_SEND           100         // [ms] Sending time interval
 #define FEEDBACK_TIMEOUT    600         // [ms] No valid feedback frame for this long = mainboard link lost
 #define TIME_IMU            10          // [ms] IMU read / AHRS update interval (fixed rate for the filter)
+#define TIME_TELEMETRY      20          // [ms] Telemetry line interval (debug command p, see tools/rtt_monitor.py)
 
 // 433Mhz RF Remote
 #ifdef REMOTE 

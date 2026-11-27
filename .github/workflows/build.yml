@@ -95,3 +95,10 @@ jobs:
           [ -n "$base_run" ] && gh run download "$base_run" -R "$GITHUB_REPOSITORY" -p 'sizes-*' -D base || true
           echo "Base: dev run ${base_run:-none}" | tee -a "$GITHUB_STEP_SUMMARY"
           python3 tools/size_report.py --summary cur --base-dir base | tee -a "$GITHUB_STEP_SUMMARY"
+
+  tools:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check Python tools compile
+        run: python3 -m py_compile tools/*.py

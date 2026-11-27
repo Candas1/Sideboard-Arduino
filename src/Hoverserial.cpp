@@ -23,6 +23,9 @@ Hoverserial::Hoverserial(Stream &serial) : _serial(serial) {
     _pitch = 0;
     _dPitch = 0;
     _imuStatus = 0;
+    memset(&_Command, 0, sizeof(_Command));
+    memset(&_Feedback, 0, sizeof(_Feedback));
+    _feedbackCount = 0;
     _idx = 0;
     _feedbackValid = false;
     _lastFeedbackMs = 0;
@@ -76,7 +79,7 @@ void Hoverserial::setImuStatus(uint8_t ok){
 
 void Hoverserial::send(){
 
-  SerialCommand Command;
+  SerialCommand &Command = _Command;
   uint16_t cmdSwitch   = (uint16_t)(
         _aux            | // Aux input 0:OFF 1:ON
         _ctrlTyp   << 1 | // 0:FOC 1:Sinusoidal 2:Commutation
@@ -139,6 +142,7 @@ void Hoverserial::receive(){
         if (_NewFeedback.start == START_FRAME && checksum == _NewFeedback.checksum) {
           // Copy the new data
           memcpy(&_Feedback, &_NewFeedback, sizeof(SerialFeedback));
+          _feedbackCount++;
 
           #ifdef DEBUG_SERIAL
             if (debug & PRINT_SERIAL_IN){
