@@ -13,7 +13,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        env: [GD32F130C6, GD32F130C8, STM32F103C6, STM32F103C8]
+        env: [GD32F130C6, GD32F130C8, STM32F103C6, STM32F103C8, STM32F103C6_coremain, STM32F103C8_coremain]
         # Flags are appended to [features] in platformio.ini (-U removes a default)
         config:
           - name: default
@@ -33,7 +33,7 @@ jobs:
           - name: all
             flags: "-DREMOTE -DMPU6050 -DAHRS"
     env:
-      PLATFORMIO_BUILD_FLAGS: ${{ matrix.config.flags }}
+      PLATFORMIO_BUILD_FLAGS: ${{ matrix.config.flags }} -Wl,-Map,.pio/build/${{ matrix.env }}/firmware.map
     steps:
       - uses: actions/checkout@v4
       - uses: actions/cache@v4
@@ -49,3 +49,9 @@ jobs:
         run: pip install --upgrade platformio
       - name: Build
         run: pio run -e ${{ matrix.env }}
+      - name: Size report
+        if: always()
+        run: |
+          map=.pio/build/${{ matrix.env }}/firmware.map
+          [ -f "$map" ] || { echo "no map file"; exit 0; }
+          python3 tools/size_report.py "$map" "${{ matrix.env }} / ${{ matrix.config.name }}" | tee -a "$GITHUB_STEP_SUMMARY"
