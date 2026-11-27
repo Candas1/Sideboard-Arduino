@@ -52,7 +52,7 @@ This is a very early development so it requires more testing and documentation.<
 | Leds                     |✔️        |✔️       |                          |
 | Sensors                  |✔️        |✔️       |                          |
 | Segger RTT debug         |✔️        |✔️       |                          |
-| Simplefoc Commander      |✔️        |✔️       |                          |
+| Debug commands           |✔️        |✔️       |                          |
 | Usart command send       |✔️        |✔️       |                          |
 | Usart feedback receive   |✔️        |✔️       |                          |
 | 433mhz remote            |✔️        |✔️       |                          |

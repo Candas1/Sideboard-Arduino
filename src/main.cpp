@@ -1,7 +1,6 @@
 #include <Arduino.h>
 #include <defines.h>
 #include <config.h>
-#include <SimpleFOC.h>
 
 #ifdef HOVER_SERIAL
   #include <Hoverserial.h>
@@ -16,7 +15,8 @@
 #ifdef DEBUG_SERIAL
   #include <RTTStream.h>
   RTTStream rtt;
-  Commander commander = Commander(rtt);
+  #include <DebugCommander.h>
+  DebugCommander commander(rtt);
   int debug = 0;
 #endif
 
@@ -90,8 +90,6 @@ void setup(){
   // Define Sensors as input
   pinMode(SENSOR1_PIN, INPUT);
   pinMode(SENSOR2_PIN, INPUT);
-
-  BLDCDriver6PWM motor = BLDCDriver6PWM(PA8, PB13, PA9, PB14, PA10, PB15);
 
   #ifdef HOVER_SERIAL
     Serial2.begin(HOVER_SERIAL_BAUD);
