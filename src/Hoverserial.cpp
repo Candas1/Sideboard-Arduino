@@ -23,7 +23,6 @@ Hoverserial::Hoverserial(Stream &serial) : _serial(serial) {
     _pitch = 0;
     _dPitch = 0;
     _imuStatus = 0;
-    _serial = serial;
     _idx = 0;
   #ifdef TEST
     _iTest = 0;
