@@ -19,7 +19,6 @@
 // Hover serial protocol
 #ifdef HOVER_SERIAL
   #define HOVER_SERIAL_BAUD   115200    // [-] Baud rate for HoverSerial (used to communicate with the hoverboard)
-  #define FEEDBACK_TIMEOUT    600       // [ms] No valid feedback frame for this long = link lost
 #endif
 
 // Test
@@ -29,6 +28,7 @@
 #endif
 
 #define TIME_SEND           100         // [ms] Sending time interval
+#define FEEDBACK_TIMEOUT    600         // [ms] No valid feedback frame for this long = mainboard link lost
 #define TIME_IMU            10          // [ms] IMU read / AHRS update interval (fixed rate for the filter)
 
 // 433Mhz RF Remote
