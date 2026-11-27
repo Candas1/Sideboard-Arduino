@@ -55,6 +55,9 @@ Update the button codes in the config.h file.<br>
 I aim with this firmware to support more IMUs by only retrieving raw data and doing the angle calculation on the MCU, so no DMP features will be supported. This should be enough for balancing use cases.<br>
 I also would like to implement a test mode to identify the IMU like [this](https://github.com/Levi--G/IMU-WhoAmIVerifier) project does as the writing on the chip is not always accurate.
 
+### Testing
+The hardware test checklist and results are in [docs/TESTING.md](docs/TESTING.md).<br>
+
 ### Status:
 This is a very early development so it requires more testing and documentation.<br>
 |                          |STM32F103C8|GD32F130C6| Comment                  |  
