@@ -6,6 +6,10 @@ on:
   pull_request:
   workflow_dispatch:
 
+permissions:
+  contents: read
+  actions: read   # download the size artifacts of the latest dev run
+
 jobs:
   build:
     name: ${{ matrix.env }} / ${{ matrix.config.name }}
@@ -33,7 +37,7 @@ jobs:
           - name: all
             flags: "-DREMOTE -DMPU6050 -DAHRS"
     env:
-      PLATFORMIO_BUILD_FLAGS: ${{ matrix.config.flags }}
+      PLATFORMIO_BUILD_FLAGS: ${{ matrix.config.flags }} -Wl,-Map,.pio/build/${{ matrix.env }}/firmware.map
     steps:
       - uses: actions/checkout@v4
       - uses: actions/cache@v4
@@ -49,6 +53,48 @@ jobs:
         run: pip install --upgrade platformio
       - name: Build
         run: pio run -e ${{ matrix.env }}
+      - name: Size report
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+          NAME: sizes-${{ matrix.env }}-${{ matrix.config.name }}
+        run: |
+          map=.pio/build/${{ matrix.env }}/firmware.map
+          [ -f "$map" ] || { echo "no map file"; exit 0; }
+          # Base: same build in the latest completed run on dev (may be missing)
+          base_run=$(gh run list -R "$GITHUB_REPOSITORY" --workflow build.yml --branch dev --event push \
+                     --status completed --limit 1 --json databaseId --jq '.[0].databaseId' || true)
+          [ -n "$base_run" ] && gh run download "$base_run" -R "$GITHUB_REPOSITORY" -n "$NAME" -D base || true
+          mkdir -p sizes
+          python3 tools/size_report.py "$map" "${{ matrix.env }} / ${{ matrix.config.name }}" \
+            --json "sizes/$NAME.json" --base "base/$NAME.json" | tee -a "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: sizes-${{ matrix.env }}-${{ matrix.config.name }}
+          path: sizes/
+          if-no-files-found: ignore
+          retention-days: 90
+
+  size-summary:
+    needs: build
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: sizes-*
+          path: cur
+      - name: Summary vs dev
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          base_run=$(gh run list -R "$GITHUB_REPOSITORY" --workflow build.yml --branch dev --event push \
+                     --status completed --limit 1 --json databaseId --jq '.[0].databaseId' || true)
+          [ -n "$base_run" ] && gh run download "$base_run" -R "$GITHUB_REPOSITORY" -p 'sizes-*' -D base || true
+          echo "Base: dev run ${base_run:-none}" | tee -a "$GITHUB_STEP_SUMMARY"
+          python3 tools/size_report.py --summary cur --base-dir base | tee -a "$GITHUB_STEP_SUMMARY"
 
   tools:
     runs-on: ubuntu-latest
