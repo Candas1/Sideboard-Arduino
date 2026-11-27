@@ -44,6 +44,48 @@
 
 #endif //IMU
 
+#if defined(IMU) && defined(DEBUG_SERIAL)
+  #include <Wire.h>
+  // Read the ID registers directly, before (and independently of) the library's
+  // own chip check, to identify the IMU and tell a bus problem from a wrong ID:
+  //   0x75: WHO_AM_I of the MPU6050 family (MPU6050 0x68, ICM-20689 0x98, ...)
+  //   0x00: WHO_AM_I of the ICM-20x48 family (ICM-20618, ICM-20948)
+  static int readImuReg(uint8_t addr, uint8_t reg){
+    Wire.beginTransmission(addr);
+    Wire.write(reg);
+    if (Wire.endTransmission() != 0) return -1;            // no ACK
+    if (Wire.requestFrom(addr, (uint8_t)1) != 1) return -1;
+    return Wire.read();
+  }
+
+  static void printImuId(int id){
+    if (id < 0) { DEBUG_SERIAL.print(F("--")); return; }
+    DEBUG_SERIAL.print(F("0x"));
+    DEBUG_SERIAL.print(id, HEX);
+  }
+
+  void probeImu(){
+    Wire.begin();
+    for (uint8_t addr = 0x68; addr <= 0x69; addr++){         // AD0 low / high
+      DEBUG_SERIAL.print(F("IMU @0x"));
+      DEBUG_SERIAL.print(addr, HEX);
+      int id75 = readImuReg(addr, 0x75);
+      int id00 = readImuReg(addr, 0x00);
+      if (id75 < 0 && id00 < 0){
+        DEBUG_SERIAL.println(F(": no ACK"));
+        continue;
+      }
+      DEBUG_SERIAL.print(F(": reg 0x75="));
+      printImuId(id75);
+      DEBUG_SERIAL.print(F(" reg 0x00="));
+      printImuId(id00);
+      DEBUG_SERIAL.println();
+    }
+  }
+
+  void onCmdWhoAmI(char* cmd){ probeImu(); }
+#endif
+
 
 // Callbacks for custom commander commands
 #ifdef DEBUG_SERIAL
@@ -104,6 +146,10 @@ void setup(){
   #endif
 
   #ifdef IMU
+    #ifdef DEBUG_SERIAL
+      probeImu();                                    // prints the IMU IDs even if begin() rejects the chip
+      commander.add('w',onCmdWhoAmI,"IMU WHO_AM_I");
+    #endif
     #ifdef MPU6050
     if (!mpu.begin()){
     #endif
