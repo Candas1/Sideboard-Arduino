@@ -52,6 +52,9 @@ class Hoverserial
     void setLock(uint8_t lock);
     void setPitch(int16_t pitch, int16_t dPitch);
     void setImuStatus(uint8_t ok);
+    const SerialCommand &getCommand(void) { return _Command; }     // last frame sent
+    const SerialFeedback &getFeedback(void) { return _Feedback; }  // last valid frame received
+    uint32_t getFeedbackCount(void) { return _feedbackCount; }     // number of valid frames received
     void send(void);
     void receive(void);
   #ifdef TEST
@@ -69,6 +72,8 @@ class Hoverserial
     int16_t _dPitch;
     uint8_t _imuStatus;
     Stream &_serial;
+    SerialCommand _Command;
+    uint32_t _feedbackCount;
     SerialFeedback _Feedback;
     SerialFeedback _NewFeedback;
     uint8_t _idx;                            // Index for new data pointer

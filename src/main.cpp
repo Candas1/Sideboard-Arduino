@@ -36,6 +36,7 @@
 #ifdef IMU
   Adafruit_Sensor *mpu_temp, *mpu_accel, *mpu_gyro;
   int imu_found = 0;
+  sensors_event_t accel, gyro, temp;   // latest IMU sample
 
   #ifdef AHRS
     #include "Adafruit_AHRS_Madgwick.h"
@@ -63,6 +64,63 @@
       void onCmdEuler(char* cmd){ debug ^= PRINT_EULER; }
     #endif    
   #endif //IMU
+#endif
+
+#ifdef DEBUG_SERIAL
+// ########################## TELEMETRY ##########################
+// Machine-readable lines for tools/rtt_monitor.py:
+//   "$H,<names>"  header, printed when telemetry is enabled
+//   "$T,<values>" one sample every TIME_TELEMETRY ms
+// The fields depend on the enabled features; the header always matches.
+void printTelemetryHeader(){
+  DEBUG_SERIAL.print(F("$H,ms,s1,s2"));
+  #ifdef IMU
+    DEBUG_SERIAL.print(F(",ax,ay,az,gx,gy,gz,imu_temp"));
+    #ifdef AHRS
+      DEBUG_SERIAL.print(F(",roll,pitch,yaw"));
+    #endif
+  #endif
+  #ifdef HOVER_SERIAL
+    DEBUG_SERIAL.print(F(",tx_cmd1,tx_cmd2,tx_pitch,tx_dpitch,tx_sensors"));
+    DEBUG_SERIAL.print(F(",rx_frames,rx_cmd1,rx_cmd2,rx_speedR,rx_speedL,rx_bat,rx_temp,rx_led"));
+  #endif
+  DEBUG_SERIAL.println();
+}
+
+#define TELEM(v)    do { DEBUG_SERIAL.print(','); DEBUG_SERIAL.print(v); } while (0)
+#define TELEMF(v)   do { DEBUG_SERIAL.print(','); DEBUG_SERIAL.print(v, 3); } while (0)
+
+void printTelemetry(){
+  DEBUG_SERIAL.print(F("$T,"));
+  DEBUG_SERIAL.print(millis());
+  TELEM(digitalRead(SENSOR1_PIN));
+  TELEM(digitalRead(SENSOR2_PIN));
+  #ifdef IMU
+    TELEMF(accel.acceleration.x); TELEMF(accel.acceleration.y); TELEMF(accel.acceleration.z);
+    TELEMF(gyro.gyro.x);          TELEMF(gyro.gyro.y);          TELEMF(gyro.gyro.z);
+    TELEMF(temp.temperature);
+    #ifdef AHRS
+      TELEMF(filter.getRoll()); TELEMF(filter.getPitch()); TELEMF(filter.getYaw());
+    #endif
+  #endif
+  #ifdef HOVER_SERIAL
+    const SerialCommand &c = hoverserial.getCommand();
+    TELEM(c.cmd1); TELEM(c.cmd2); TELEM(c.pitch); TELEM(c.dPitch); TELEM(c.sensors);
+    const SerialFeedback &f = hoverserial.getFeedback();
+    TELEM(hoverserial.getFeedbackCount());
+    TELEM(f.cmd1); TELEM(f.cmd2); TELEM(f.speedR_meas); TELEM(f.speedL_meas);
+    TELEM(f.batVoltage); TELEM(f.boardTemp); TELEM(f.cmdLed);
+  #endif
+  DEBUG_SERIAL.println();
+}
+
+// p: toggle telemetry, p1: on, p0: off
+void onCmdTelemetry(char* cmd){
+  if (cmd[0] == '1')      debug |= PRINT_TELEMETRY;
+  else if (cmd[0] == '0') debug &= ~PRINT_TELEMETRY;
+  else                    debug ^= PRINT_TELEMETRY;
+  if (debug & PRINT_TELEMETRY) printTelemetryHeader();
+}
 #endif
 
 // ########################## SETUP ##########################
@@ -141,6 +199,7 @@ void setup(){
 
   // Add custom commander commands
   #ifdef DEBUG_SERIAL
+    commander.add('p',onCmdTelemetry,"Telemetry (p1 on, p0 off)");
     #ifdef HOVER_SERIAL
       commander.add('i',onCmdSerialIn,"Print Serial In");
       commander.add('o',onCmdSerialOut,"Print Serial Out");
@@ -169,9 +228,6 @@ void setup(){
 unsigned long iTimeSend = 0;
 #ifdef IMU
   unsigned long iTimeImu = 0;
-  sensors_event_t accel;
-  sensors_event_t gyro;
-  sensors_event_t temp;
 #endif
 
 void loop(){
@@ -202,6 +258,14 @@ void loop(){
       #endif
     }
   #endif //IMU
+
+  #ifdef DEBUG_SERIAL
+    static unsigned long iTimeTelemetry = 0;
+    if ((debug & PRINT_TELEMETRY) && (millis() - iTimeTelemetry >= TIME_TELEMETRY)){
+      iTimeTelemetry = millis();
+      printTelemetry();
+    }
+  #endif
 
   // Delay
   unsigned long timeNow = millis();

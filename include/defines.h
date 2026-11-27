@@ -24,6 +24,7 @@
 #define PRINT_REMOTE                (0x20)
 #define PRINT_SERIAL_IN             (0x40)
 #define PRINT_SERIAL_OUT            (0x80)
+#define PRINT_TELEMETRY             (0x100)
 
 #define LED_RED_SET                 (0x01)
 #define LED_GREEN_SET               (0x02)

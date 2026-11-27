@@ -28,6 +28,16 @@ Only downside is that you need to make sure you stop the rtt connection before f
 The debug menu options depend on what features are enabled in platformio.ini.<br>
 Type ? and enter in the serial monitor.
 
+### RTT monitor (live plot)
+`tools/rtt_monitor.py` plots the sideboard values live over SEGGER RTT with the same ST-Link, no USB-UART adapter needed.<br>
+It needs a build with DEBUG_RTT, and the debug command `p` (telemetry: `p1` on, `p0` off), which the tool sends by itself.<br>
+```
+pip install -r tools/requirements.txt
+python tools/rtt_monitor.py --env GD32F130C8          # RTT address read from .pio/build/<env>/firmware.elf
+python tools/rtt_monitor.py --env GD32F130C8 --csv log.csv
+```
+Lines typed in the console are sent to the board (`?`, `i`, `o`...). Only one program can use the ST-Link at a time: stop the PlatformIO RTT task/monitor first.<br>
+
 ### Remote
 Some of the sideboards have a 433Mhz receiver and a remote.<br>
 You can enable this feature by uncommenting REMOTE in the [features] section of platformio.ini.<br>
