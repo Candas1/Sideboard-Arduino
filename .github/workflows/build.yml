@@ -1,0 +1,51 @@
+name: Build
+
+on:
+  push:
+    branches: [master, dev]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: ${{ matrix.env }} / ${{ matrix.config.name }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        env: [GD32F130C6, GD32F130C8, STM32F103C6, STM32F103C8]
+        # Flags are appended to [features] in platformio.ini (-U removes a default)
+        config:
+          - name: default
+            flags: ""
+          - name: none
+            flags: "-UDEBUG_RTT -UHOVER_SERIAL -UTEST"
+          - name: serial-no-test
+            flags: "-UTEST"
+          - name: serial-remote-nodebug
+            flags: "-UDEBUG_RTT -UTEST -DREMOTE"
+          - name: remote-no-serial
+            flags: "-UHOVER_SERIAL -UTEST -DREMOTE"
+          - name: mpu6050-ahrs-nodebug
+            flags: "-UDEBUG_RTT -DMPU6050 -DAHRS"
+          - name: icm20948-ahrs
+            flags: "-DICM20948 -DAHRS"
+          - name: all
+            flags: "-DREMOTE -DMPU6050 -DAHRS"
+    env:
+      PLATFORMIO_BUILD_FLAGS: ${{ matrix.config.flags }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cache/pip
+            ~/.platformio
+          key: pio-${{ matrix.env }}-${{ hashFiles('platformio.ini') }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install PlatformIO
+        run: pip install --upgrade platformio
+      - name: Build
+        run: pio run -e ${{ matrix.env }}
